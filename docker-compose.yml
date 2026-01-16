@@ -1,0 +1,39 @@
+services:
+  graphite:
+    image: graphiteapp/graphite-statsd
+    container_name: graphite
+    ports:
+      - "2003:2003" # Graphite pickle protocol
+      - "2004:2004" # Graphite pickle protocol
+      - "8080:80"   # Graphite web UI
+      - "8125:8125/udp" # StatsD
+      - "8126:8126" # StatsD admin
+    volumes:
+      - graphite-storage:/opt/graphite/storage
+
+  grafana:
+    image: grafana/grafana-oss
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - graphite
+      - prometheus
+    volumes:
+      - grafana-storage:/var/lib/grafana
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-storage:/prometheus
+
+volumes:
+  grafana-storage:
+  graphite-storage:
+  prometheus-storage:

@@ -13,10 +13,6 @@ public class MetricsPreStartup implements IGuicePreStartup<MetricsPreStartup> {
     @Getter
     private static MetricsOptions options;
 
-    public static MetricsOptions getOptions() {
-        return options;
-    }
-
     @Override
     public List<Future<Boolean>> onStartup() {
         var scanResult = IGuiceContext.instance().getScanResult();

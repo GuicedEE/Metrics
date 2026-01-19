@@ -40,6 +40,11 @@ public class MetricsModule extends AbstractModule implements IGuiceModule<Metric
         bindInterceptor(Matchers.any(), Matchers.annotatedWith(org.eclipse.microprofile.metrics.annotation.Timed.class), timedInterceptor);
         bindInterceptor(Matchers.annotatedWith(org.eclipse.microprofile.metrics.annotation.Timed.class), Matchers.any(), timedInterceptor);
 
+        MetricMethodInterceptor metricMethodInterceptor = new MetricMethodInterceptor();
+        requestInjection(metricMethodInterceptor);
+        bindInterceptor(Matchers.any(), Matchers.annotatedWith(MetricMethod.class), metricMethodInterceptor);
+        bindInterceptor(Matchers.annotatedWith(MetricMethod.class), Matchers.any(), metricMethodInterceptor);
+
         ServiceLoader<Metrics> metricsLoaders = ServiceLoader.load(Metrics.class);
         for (Metrics loader : metricsLoaders) {
             Map<Class<? extends java.lang.annotation.Annotation>, Class<? extends MethodInterceptor>> annotations = loader.annotations();

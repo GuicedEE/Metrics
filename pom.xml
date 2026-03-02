@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.guicedee</groupId>
-    <artifactId>guiced-metrics</artifactId>
+    <artifactId>metrics</artifactId>
     <packaging>jar</packaging>
     <version>2.0.0-SNAPSHOT</version>
 
@@ -40,21 +40,21 @@
 
         <dependency>
             <groupId>com.guicedee</groupId>
-            <artifactId>guiced-vertx</artifactId>
+            <artifactId>vertx</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.guicedee</groupId>
-            <artifactId>guiced-vertx-web</artifactId>
+            <artifactId>web</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.guicedee</groupId>
-            <artifactId>guice-inject-client</artifactId>
+            <artifactId>client</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.guicedee.services</groupId>
+            <groupId>com.guicedee.modules.services</groupId>
             <artifactId>metrics-core</artifactId>
         </dependency>
 
@@ -65,11 +65,11 @@
 
         <dependency>
             <groupId>com.guicedee</groupId>
-            <artifactId>guice-injection</artifactId>
+            <artifactId>inject</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.guicedee.services</groupId>
+            <groupId>com.guicedee.modules.services</groupId>
             <artifactId>guice</artifactId>
         </dependency>
 

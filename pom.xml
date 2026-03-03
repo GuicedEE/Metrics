@@ -22,7 +22,7 @@
     <properties>
         <ignore.moditect>true</ignore.moditect>
         <flatten.pom>true</flatten.pom>
-
+        <project.scm.nameUrl>/GuicedEE/Metrics</project.scm.nameUrl>
     </properties>
 
     <dependencies>

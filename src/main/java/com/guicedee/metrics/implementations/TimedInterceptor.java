@@ -9,11 +9,19 @@ import org.eclipse.microprofile.metrics.MetricRegistry;
 import org.eclipse.microprofile.metrics.Tag;
 import org.eclipse.microprofile.metrics.Timer;
 
+/**
+ * Guice method interceptor for MicroProfile {@link Timed}-annotated methods.
+ *
+ * <p>Records timing information each time the annotated method is invoked.</p>
+ */
 public class TimedInterceptor implements MethodInterceptor {
 
     @Inject
     private Provider<MetricRegistry> registryProvider;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Timed annotation = invocation.getMethod().getAnnotation(Timed.class);

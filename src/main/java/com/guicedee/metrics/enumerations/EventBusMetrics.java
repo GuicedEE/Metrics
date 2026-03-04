@@ -34,17 +34,28 @@ public enum EventBusMetrics {
 
     private final String metricName;
 
+    /**
+     * Creates an event bus metric with the given name.
+     *
+     * @param metricName the metric name pattern
+     */
     EventBusMetrics(String metricName) {
         this.metricName = metricName;
     }
 
     /**
-     * Returns the formatted metric name if it contains placeholders.
+     * Formats the metric name with the given arguments.
+     *
+     * @param args the format arguments
+     * @return the formatted metric name
      */
     public String format(Object... args) {
         return String.format(metricName, args);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return metricName;

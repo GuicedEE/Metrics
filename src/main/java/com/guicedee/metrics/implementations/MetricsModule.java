@@ -18,8 +18,15 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Guice module that binds Dropwizard and MicroProfile metric registries and
+ * wires metric interceptors for annotated methods.
+ */
 public class MetricsModule extends AbstractModule implements IGuiceModule<MetricsModule> {
 
+    /**
+     * Configures metric registry bindings and method interceptors.
+     */
     @Override
     protected void configure() {
         MetricRegistry registry = getMetricRegistry();
@@ -70,6 +77,11 @@ public class MetricsModule extends AbstractModule implements IGuiceModule<Metric
         }
     }
 
+    /**
+     * Configures Graphite reporting if enabled in {@link MetricsOptions}.
+     *
+     * @param registry the metric registry to report from
+     */
     private void setupGraphite(MetricRegistry registry) {
         MetricsOptions options = MetricsPreStartup.getOptions();
         if (options != null && options.graphite().enabled()) {
@@ -82,6 +94,11 @@ public class MetricsModule extends AbstractModule implements IGuiceModule<Metric
         }
     }
 
+    /**
+     * Obtains or creates the shared Dropwizard metric registry.
+     *
+     * @return the metric registry, or {@code null} if unavailable
+     */
     private MetricRegistry getMetricRegistry() {
         try {
             MetricsOptions options = MetricsPreStartup.getOptions();

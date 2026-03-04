@@ -9,11 +9,20 @@ import lombok.Getter;
 
 import java.util.List;
 
+/**
+ * Pre-startup hook that discovers {@link MetricsOptions} from the classpath
+ * and makes the resolved options available to other metrics components.
+ */
 public class MetricsPreStartup implements IGuicePreStartup<MetricsPreStartup> {
 
     @Getter
     private static MetricsOptions options;
 
+    /**
+     * Scans for {@link MetricsOptions} annotations and initializes the configuration.
+     *
+     * @return a list of futures representing startup completion
+     */
     @Override
     public List<Future<Boolean>> onStartup() {
         var scanResult = IGuiceContext.instance().getScanResult();
@@ -134,6 +143,11 @@ public class MetricsPreStartup implements IGuicePreStartup<MetricsPreStartup> {
         return List.of(Future.succeededFuture(true));
     }
 
+    /**
+     * Returns the sort order for this pre-startup hook.
+     *
+     * @return the sort order value
+     */
     @Override
     public Integer sortOrder() {
         // Run before VertXPreStartup if possible, or at least before it builds Vertx

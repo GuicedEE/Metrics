@@ -11,15 +11,31 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * MicroProfile {@link MetricRegistry} implementation backed by a Dropwizard {@link com.codahale.metrics.MetricRegistry}.
+ */
 public class MPMetricRegistry implements MetricRegistry {
     private final com.codahale.metrics.MetricRegistry delegate;
     private final String scope;
 
+    /**
+     * Creates an MP metric registry wrapping the given Dropwizard registry.
+     *
+     * @param delegate the Dropwizard metric registry to delegate to
+     * @param scope    the MicroProfile metric scope
+     */
     public MPMetricRegistry(com.codahale.metrics.MetricRegistry delegate, String scope) {
         this.delegate = delegate;
         this.scope = scope;
     }
 
+    /**
+     * Builds a qualified metric name incorporating any tags.
+     *
+     * @param name the base metric name
+     * @param tags optional tags to append
+     * @return the qualified metric name
+     */
     private String getQualifiedName(String name, Tag... tags) {
         if (tags == null || tags.length == 0) {
             return name;
@@ -33,6 +49,12 @@ public class MPMetricRegistry implements MetricRegistry {
         return sb.toString();
     }
 
+    /**
+     * Builds a qualified metric name from a {@link MetricID}.
+     *
+     * @param metricID the metric ID containing name and tags
+     * @return the qualified metric name
+     */
     private String getQualifiedName(MetricID metricID) {
         String name = metricID.getName();
         Map<String, String> tags = metricID.getTags();
@@ -163,6 +185,12 @@ public class MPMetricRegistry implements MetricRegistry {
         return wrap(metric);
     }
 
+    /**
+     * Wraps a Dropwizard metric into its MicroProfile equivalent.
+     *
+     * @param metric the Dropwizard metric to wrap
+     * @return the wrapped MicroProfile metric, or {@code null} if unknown
+     */
     private Metric wrap(com.codahale.metrics.Metric metric) {
         if (metric instanceof com.codahale.metrics.Counter) return new MPCounter((com.codahale.metrics.Counter) metric);
         if (metric instanceof com.codahale.metrics.Histogram) return new MPHistogram((com.codahale.metrics.Histogram) metric);

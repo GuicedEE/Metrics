@@ -15,14 +15,28 @@ public enum DatagramMetrics {
 
     private final String metricName;
 
+    /**
+     * Creates a datagram metric with the given name.
+     *
+     * @param metricName the metric name pattern
+     */
     DatagramMetrics(String metricName) {
         this.metricName = metricName;
     }
 
+    /**
+     * Formats the metric name with the given arguments.
+     *
+     * @param args the format arguments
+     * @return the formatted metric name
+     */
     public String format(Object... args) {
         return String.format(metricName, args);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return metricName;

@@ -4,7 +4,7 @@ import lombok.Getter;
 
 /**
  * Pool metrics.
- * Base name: vertx.pools.<type>.<name>
+ * Base name: {@code vertx.pools.<type>.<name>}
  */
 @Getter
 public enum PoolMetrics {
@@ -17,10 +17,18 @@ public enum PoolMetrics {
 
     private final String metricName;
 
+    /**
+     * Creates a pool metric with the given name.
+     *
+     * @param metricName the metric name
+     */
     PoolMetrics(String metricName) {
         this.metricName = metricName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return metricName;

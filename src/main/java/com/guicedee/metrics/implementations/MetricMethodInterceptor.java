@@ -10,11 +10,20 @@ import org.eclipse.microprofile.metrics.Tag;
 
 import java.lang.reflect.Method;
 
+/**
+ * Guice method interceptor for {@link MetricMethod}-annotated methods.
+ *
+ * <p>Increments a counter each time the annotated method is invoked. If the
+ * method returns a numeric type, the current counter value is returned instead.</p>
+ */
 public class MetricMethodInterceptor implements MethodInterceptor {
 
     @Inject
     private Provider<MetricRegistry> registryProvider;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Method method = invocation.getMethod();

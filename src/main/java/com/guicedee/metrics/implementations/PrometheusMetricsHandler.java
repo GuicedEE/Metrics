@@ -8,8 +8,14 @@ import io.vertx.ext.web.RoutingContext;
 import java.util.Map;
 import java.util.SortedMap;
 
+/**
+ * Vert.x route handler that renders Dropwizard metrics in Prometheus text format.
+ */
 public class PrometheusMetricsHandler implements Handler<RoutingContext> {
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void handle(RoutingContext event) {
         MetricRegistry registry = IGuiceContext.get(MetricRegistry.class);
@@ -81,10 +87,25 @@ public class PrometheusMetricsHandler implements Handler<RoutingContext> {
                 .end(sb.toString());
     }
 
+    /**
+     * Sanitizes a metric name into a Prometheus-compatible format.
+     *
+     * @param name the original metric name
+     * @return the sanitized name
+     */
     private String sanitizeName(String name) {
         return name.replaceAll("[^a-zA-Z0-9_]", "_");
     }
 
+    /**
+     * Appends a single metric line in Prometheus exposition format.
+     *
+     * @param sb     the string builder to append to
+     * @param name   the metric name
+     * @param type   the Prometheus metric type
+     * @param labels optional label string, or {@code null}
+     * @param value  the metric value
+     */
     private void appendMetric(StringBuilder sb, String name, String type, String labels, Object value) {
         sb.append("# TYPE ").append(name).append(" ").append(type).append("\n");
         sb.append(name);

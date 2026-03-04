@@ -12,21 +12,37 @@ import java.lang.annotation.Target;
 public @interface Match {
     /**
      * The value to match (address, URI, etc.).
+     *
+     * @return the match value
      */
     String value();
 
     /**
      * The type of match (EQUALS or REGEX).
+     *
+     * @return the match type
      */
     MatchType type() default MatchType.EQUALS;
 
     /**
      * Optional alias for the match.
+     *
+     * @return the alias, or empty string if none
      */
     String alias() default "";
 
+    /**
+     * The type of matching to perform.
+     */
     enum MatchType {
+        /**
+         * Match using exact equality.
+         */
         EQUALS,
+
+        /**
+         * Match using regular expression.
+         */
         REGEX
     }
 }

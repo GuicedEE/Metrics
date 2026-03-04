@@ -10,11 +10,19 @@ import com.google.inject.Provider;
 import org.eclipse.microprofile.metrics.MetricRegistry;
 import org.eclipse.microprofile.metrics.Tag;
 
+/**
+ * Guice method interceptor for MicroProfile {@link Counted}-annotated methods.
+ *
+ * <p>Increments a counter each time the annotated method is invoked.</p>
+ */
 public class CountedInterceptor implements MethodInterceptor {
 
     @Inject
     private Provider<MetricRegistry> registryProvider;
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         Counted annotation = invocation.getMethod().getAnnotation(Counted.class);

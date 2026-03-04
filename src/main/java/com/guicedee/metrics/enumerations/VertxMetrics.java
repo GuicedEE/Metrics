@@ -14,10 +14,18 @@ public enum VertxMetrics {
 
     private final String metricName;
 
+    /**
+     * Creates a Vert.x core metric with the given name.
+     *
+     * @param metricName the metric name
+     */
     VertxMetrics(String metricName) {
         this.metricName = metricName;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return metricName;

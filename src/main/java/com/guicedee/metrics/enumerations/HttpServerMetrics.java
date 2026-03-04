@@ -4,7 +4,7 @@ import lombok.Getter;
 
 /**
  * HTTP Server metrics.
- * Base name: vertx.http.servers.<host>:<port>
+ * Base name: {@code vertx.http.servers.<host>:<port>}
  * Includes Net Server metrics plus these.
  */
 @Getter
@@ -31,14 +31,28 @@ public enum HttpServerMetrics {
 
     private final String metricName;
 
+    /**
+     * Creates an HTTP server metric with the given name.
+     *
+     * @param metricName the metric name pattern
+     */
     HttpServerMetrics(String metricName) {
         this.metricName = metricName;
     }
 
+    /**
+     * Formats the metric name with the given arguments.
+     *
+     * @param args the format arguments
+     * @return the formatted metric name
+     */
     public String format(Object... args) {
         return String.format(metricName, args);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return metricName;

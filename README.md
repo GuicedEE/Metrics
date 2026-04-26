@@ -2,7 +2,7 @@
 
 [![Build](https://github.com/GuicedEE/Metrics/actions/workflows/build.yml/badge.svg)](https://github.com/GuicedEE/Metrics/actions/workflows/build.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/com.guicedee/metrics)](https://central.sonatype.com/artifact/com.guicedee/metrics)
-[![Maven Snapshot](https://img.shields.io/nexus/s/com.guicedee/metrics?server=https%3A%2F%2Foss.sonatype.org&label=Maven%20Snapshot)](https://oss.sonatype.org/content/repositories/snapshots/com/guicedee/metrics/)
+[![Snapshot](https://img.shields.io/badge/Snapshot-2.0.0-SNAPSHOT-orange)](https://github.com/GuicedEE/Packages/packages/maven/com.guicedee.metrics)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 
 ![Java 25+](https://img.shields.io/badge/Java-25%2B-green)
@@ -97,30 +97,53 @@ No JPMS `provides` declaration is needed — the metrics module is registered au
 
 ## 📐 Startup Flow
 
-```
-IGuiceContext.instance()
- └─ IGuicePreStartup hooks
-     └─ MetricsPreStartup.onStartup() (sortOrder = MIN_VALUE + 40)
-         └─ Scan for @MetricsOptions annotation via ClassGraph
-         └─ Resolve environment variable overrides
- └─ VertxConfigurator SPIs (before Vert.x starts)
-     └─ MetricsVertxConfigurator.builder()
-         ├─ Build DropwizardMetricsOptions from @MetricsOptions
-         ├─ Configure monitored URIs, routes, event bus handlers, client endpoints
-         └─ Apply to VertxBuilder via VertxOptions.setMetricsOptions()
- └─ Guice injector created
-     └─ MetricsModule.configure()
-         ├─ bind(MetricRegistry.class) from SharedMetricRegistries
-         ├─ bind(MP MetricRegistry.class) via MPMetricRegistryProvider
-         ├─ Bind CountedInterceptor for @Counted
-         ├─ Bind TimedInterceptor for @Timed
-         ├─ Bind MetricMethodInterceptor for @MetricMethod
-         ├─ Load Metrics SPI for custom interceptors
-         └─ Setup GraphiteReporter (if enabled)
- └─ IGuicePostStartup hooks
-     └─ VertxWebServerPostStartup (from web module)
-         └─ PrometheusMetricsConfigurator.builder() (sortOrder = MIN_VALUE + 70)
-             └─ Register GET handler at prometheus endpoint path
+```mermaid
+flowchart TD
+    n1["IGuiceContext.instance()"]
+    n2["IGuicePreStartup hooks"]
+    n1 --> n2
+    n3["MetricsPreStartup.onStartup()<br/>sortOrder = MIN_VALUE + 40"]
+    n2 --> n3
+    n4["Scan for @MetricsOptions annotation via ClassGraph"]
+    n3 --> n4
+    n5["Resolve environment variable overrides"]
+    n3 --> n5
+    n6["VertxConfigurator SPIs<br/>before Vert.x starts"]
+    n1 --> n6
+    n7["MetricsVertxConfigurator.builder()"]
+    n6 --> n7
+    n8["Build DropwizardMetricsOptions from @MetricsOptions"]
+    n7 --> n8
+    n9["Configure monitored URIs, routes, event bus handlers, client endpoints"]
+    n7 --> n9
+    n10["Apply to VertxBuilder via VertxOptions.setMetricsOptions()"]
+    n7 --> n10
+    n11["Guice injector created"]
+    n1 --> n11
+    n12["MetricsModule.configure()"]
+    n11 --> n12
+    n13["bind(MetricRegistry.class) from SharedMetricRegistries"]
+    n12 --> n13
+    n14["bind(MP MetricRegistry.class) via MPMetricRegistryProvider"]
+    n12 --> n14
+    n15["Bind CountedInterceptor for @Counted"]
+    n12 --> n15
+    n16["Bind TimedInterceptor for @Timed"]
+    n12 --> n16
+    n17["Bind MetricMethodInterceptor for @MetricMethod"]
+    n12 --> n17
+    n18["Load Metrics SPI for custom interceptors"]
+    n12 --> n18
+    n19["Setup GraphiteReporter<br/>if enabled"]
+    n12 --> n19
+    n20["IGuicePostStartup hooks"]
+    n1 --> n20
+    n21["VertxWebServerPostStartup<br/>from web module"]
+    n20 --> n21
+    n22["PrometheusMetricsConfigurator.builder()<br/>sortOrder = MIN_VALUE + 70"]
+    n21 --> n22
+    n23["Register GET handler at prometheus endpoint path"]
+    n22 --> n23
 ```
 
 ## 📊 Metric Annotations
@@ -385,16 +408,17 @@ A `prometheus.yml` is included that scrapes `host.docker.internal:9090/metrics` 
 
 ## 🗺️ Module Graph
 
-```
-com.guicedee.metrics
- ├── com.guicedee.guicedinjection   (GuicedEE runtime — scanning, Guice, lifecycle)
- ├── com.guicedee.client            (GuicedEE SPI contracts)
- ├── com.guicedee.vertx             (Vert.x lifecycle — VertxConfigurator SPI)
- ├── com.guicedee.vertx.web         (Vert.x Web — Router, optional for Prometheus endpoint)
- ├── io.vertx.metrics.dropwizard    (Vert.x Dropwizard Metrics integration)
- ├── com.codahale.metrics           (Dropwizard Metrics core + Graphite reporter)
- ├── io.vertx.core                  (Vert.x core)
- └── com.guicedee.modules.services.metrics  (MicroProfile Metrics API — annotations, SPI)
+```mermaid
+flowchart LR
+    com_guicedee_metrics["com.guicedee.metrics"]
+    com_guicedee_metrics --> com_guicedee_guicedinjection["com.guicedee.guicedinjection<br/>GuicedEE runtime — scanning, Guice, lifecycle"]
+    com_guicedee_metrics --> com_guicedee_client["com.guicedee.client<br/>GuicedEE SPI contracts"]
+    com_guicedee_metrics --> com_guicedee_vertx["com.guicedee.vertx<br/>Vert.x lifecycle — VertxConfigurator SPI"]
+    com_guicedee_metrics --> com_guicedee_vertx_web["com.guicedee.vertx.web<br/>Vert.x Web — Router, optional for Prometheus endpoint"]
+    com_guicedee_metrics --> io_vertx_metrics_dropwizard["io.vertx.metrics.dropwizard<br/>Vert.x Dropwizard Metrics integration"]
+    com_guicedee_metrics --> com_codahale_metrics["com.codahale.metrics<br/>Dropwizard Metrics core + Graphite reporter"]
+    com_guicedee_metrics --> io_vertx_core["io.vertx.core<br/>Vert.x core"]
+    com_guicedee_metrics --> com_guicedee_modules_services_metrics["com.guicedee.modules.services.metrics<br/>MicroProfile Metrics API — annotations, SPI"]
 ```
 
 ## 🧩 JPMS

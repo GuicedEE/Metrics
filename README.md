@@ -2,13 +2,11 @@
 
 [![Build](https://github.com/GuicedEE/Metrics/actions/workflows/build.yml/badge.svg)](https://github.com/GuicedEE/Metrics/actions/workflows/build.yml)
 [![Maven Central](https://img.shields.io/maven-central/v/com.guicedee/metrics)](https://central.sonatype.com/artifact/com.guicedee/metrics)
-[![Snapshot](https://img.shields.io/badge/Snapshot-2.0.1-SNAPSHOT-SNAPSHOT-orange)](https://github.com/GuicedEE/Packages/packages/maven/com.guicedee.metrics)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue)](https://www.apache.org/licenses/LICENSE-2.0)
 
 ![Java 25+](https://img.shields.io/badge/Java-25%2B-green)
 ![Guice 7](https://img.shields.io/badge/Guice-7%2B-green)
 ![Vert.X 5](https://img.shields.io/badge/Vert.x-5%2B-green)
-![Maven 4](https://img.shields.io/badge/Maven-4%2B-green)
 
 Production-ready **application metrics** for [GuicedEE](https://github.com/GuicedEE) using **Vert.x 5 Dropwizard Metrics** and the **MicroProfile Metrics 5.1 API**.
 Annotate your methods with standard `@Counted`, `@Timed`, and custom `@MetricMethod` — interceptors are bound through Guice AOP, metrics are collected into a shared `MetricRegistry`, and a Prometheus-compatible scrape endpoint is exposed on the Vert.x Web `Router` automatically.

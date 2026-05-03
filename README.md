@@ -26,7 +26,7 @@ Built on [Vert.x Dropwizard Metrics](https://vertx.io/docs/vertx-dropwizard-metr
 <summary>Gradle (Kotlin DSL)</summary>
 
 ```kotlin
-implementation("com.guicedee:metrics:2.0.1-SNAPSHOT")
+implementation("com.guicedee:metrics:2.0.1")
 ```
 </details>
 

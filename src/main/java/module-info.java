@@ -19,9 +19,9 @@ module com.guicedee.metrics {
     exports com.guicedee.metrics.enumerations;
     exports com.guicedee.metrics.implementations.mp;
 
-    opens com.guicedee.metrics to com.google.guice, com.fasterxml.jackson.databind, com.guicedee.guicedinjection, com.guicedee.client, guiced.metrics.test, com.google.common;
-    opens com.guicedee.metrics.implementations to com.google.guice, com.fasterxml.jackson.databind, com.guicedee.guicedinjection, com.guicedee.client, guiced.metrics.test, com.google.common;
-    opens com.guicedee.metrics.implementations.mp to com.google.guice, com.fasterxml.jackson.databind, com.guicedee.guicedinjection, com.guicedee.client, guiced.metrics.test, com.google.common;
+    opens com.guicedee.metrics to com.google.guice, tools.jackson.databind, com.guicedee.guicedinjection, com.guicedee.client, guiced.metrics.test, com.google.common;
+    opens com.guicedee.metrics.implementations to com.google.guice, tools.jackson.databind, com.guicedee.guicedinjection, com.guicedee.client, guiced.metrics.test, com.google.common;
+    opens com.guicedee.metrics.implementations.mp to com.google.guice, tools.jackson.databind, com.guicedee.guicedinjection, com.guicedee.client, guiced.metrics.test, com.google.common;
 
     provides com.guicedee.client.services.lifecycle.IGuiceModule with com.guicedee.metrics.implementations.MetricsModule;
     provides com.guicedee.client.services.lifecycle.IGuicePreStartup with com.guicedee.metrics.implementations.MetricsPreStartup;

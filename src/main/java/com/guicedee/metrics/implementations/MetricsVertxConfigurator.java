@@ -10,7 +10,9 @@ import io.vertx.core.VertxOptions;
 
 public class MetricsVertxConfigurator implements VertxConfigurator {
     @Override
-    public VertxBuilder builder(VertxBuilder builder) {
+    public VertxBuilder builder(VertxBuilder builder) { return builder; }
+
+    @Override public VertxOptions options(VertxOptions runtime) {
         MetricsOptions options = MetricsPreStartup.getOptions();
         DropwizardMetricsOptions dwOptions = new DropwizardMetricsOptions();
         if (options != null) {
@@ -37,7 +39,7 @@ public class MetricsVertxConfigurator implements VertxConfigurator {
                     .setRegistryName("vertx")
                     .setJmxEnabled(true);
         }
-        return builder.with(new VertxOptions().setMetricsOptions(dwOptions));
+        return runtime.setMetricsOptions(dwOptions);
     }
 
     private io.vertx.ext.dropwizard.Match toMatch(Match match) {

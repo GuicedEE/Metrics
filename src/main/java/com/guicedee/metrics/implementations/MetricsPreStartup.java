@@ -150,8 +150,7 @@ public class MetricsPreStartup implements IGuicePreStartup<MetricsPreStartup> {
      */
     @Override
     public Integer sortOrder() {
-        // Run before VertXPreStartup if possible, or at least before it builds Vertx
-        // VertXPreStartup has sortOrder Integer.MIN_VALUE + 50;
-        return Integer.MIN_VALUE + 40;
+        // Resolve metrics before Hazelcast (+37) and Vert.x (+38) compose runtime options.
+        return Integer.MIN_VALUE + 36;
     }
 }

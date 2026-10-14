@@ -1,5 +1,7 @@
 package com.guicedee.metrics.implementations;
 
+import com.guicedee.client.utils.ClassLoading;
+
 import com.guicedee.client.IGuiceContext;
 import com.guicedee.client.services.lifecycle.IGuicePreStartup;
 import com.guicedee.metrics.Match;
@@ -29,7 +31,7 @@ public class MetricsPreStartup implements IGuicePreStartup<MetricsPreStartup> {
         var classes = scanResult.getClassesWithAnnotation(MetricsOptions.class);
         if (!classes.isEmpty()) {
             // Take the first one found
-            var clazz = classes.getFirst().loadClass();
+            var clazz = ClassLoading.loadClass(classes.getFirst());
             MetricsOptions annotation = clazz.getAnnotation(MetricsOptions.class);
             options = new MetricsOptions() {
                 @Override

@@ -1,8 +1,6 @@
 package com.guicedee.metrics.implementations;
 
-import com.guicedee.client.utils.ClassLoading;
-
-import com.guicedee.client.IGuiceContext;
+import com.guicedee.client.utils.Discovery;
 import com.guicedee.client.services.lifecycle.IGuicePreStartup;
 import com.guicedee.metrics.Match;
 import com.guicedee.metrics.MetricsOptions;
@@ -27,121 +25,116 @@ public class MetricsPreStartup implements IGuicePreStartup<MetricsPreStartup> {
      */
     @Override
     public List<Future<Boolean>> onStartup() {
-        var scanResult = IGuiceContext.instance().getScanResult();
-        var classes = scanResult.getClassesWithAnnotation(MetricsOptions.class);
-        if (!classes.isEmpty()) {
-            // Take the first one found
-            var clazz = ClassLoading.loadClass(classes.getFirst());
-            MetricsOptions annotation = clazz.getAnnotation(MetricsOptions.class);
-            options = new MetricsOptions() {
-                @Override
-                public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                    return MetricsOptions.class;
-                }
+        var annotations = Discovery.annotations(MetricsOptions.class);
+        MetricsOptions annotation = annotations.isEmpty() ? null : annotations.getFirst();
+        options = new MetricsOptions() {
+            @Override
+            public Class<? extends java.lang.annotation.Annotation> annotationType() {
+                return MetricsOptions.class;
+            }
 
-                @Override
-                public boolean enabled() {
-                    return Boolean.parseBoolean(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_ENABLED", String.valueOf(annotation.enabled())));
-                }
+            @Override
+            public boolean enabled() {
+                return Boolean.parseBoolean(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_ENABLED", String.valueOf((annotation == null ? true : annotation.enabled()))));
+            }
 
-                @Override
-                public String registryName() {
-                    return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_REGISTRY_NAME", annotation.registryName());
-                }
+            @Override
+            public String registryName() {
+                return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_REGISTRY_NAME", (annotation == null ? "vertx" : annotation.registryName()));
+            }
 
-                @Override
-                public boolean jmxEnabled() {
-                    return Boolean.parseBoolean(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_JMX_ENABLED", String.valueOf(annotation.jmxEnabled())));
-                }
+            @Override
+            public boolean jmxEnabled() {
+                return Boolean.parseBoolean(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_JMX_ENABLED", String.valueOf((annotation == null ? true : annotation.jmxEnabled()))));
+            }
 
-                @Override
-                public String jmxDomain() {
-                    return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_JMX_DOMAIN", annotation.jmxDomain());
-                }
+            @Override
+            public String jmxDomain() {
+                return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_JMX_DOMAIN", (annotation == null ? "vertx" : annotation.jmxDomain()));
+            }
 
-                @Override
-                public String baseName() {
-                    return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_BASE_NAME", annotation.baseName());
-                }
+            @Override
+            public String baseName() {
+                return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_BASE_NAME", (annotation == null ? "vertx" : annotation.baseName()));
+            }
 
-                @Override
-                public Match[] monitoredEventBusHandlers() {
-                    return annotation.monitoredEventBusHandlers();
-                }
+            @Override
+            public Match[] monitoredEventBusHandlers() {
+                return (annotation == null ? new Match[0] : annotation.monitoredEventBusHandlers());
+            }
 
-                @Override
-                public Match[] monitoredHttpServerUris() {
-                    return annotation.monitoredHttpServerUris();
-                }
+            @Override
+            public Match[] monitoredHttpServerUris() {
+                return (annotation == null ? new Match[0] : annotation.monitoredHttpServerUris());
+            }
 
-                @Override
-                public Match[] monitoredHttpServerRoutes() {
-                    return annotation.monitoredHttpServerRoutes();
-                }
+            @Override
+            public Match[] monitoredHttpServerRoutes() {
+                return (annotation == null ? new Match[0] : annotation.monitoredHttpServerRoutes());
+            }
 
-                @Override
-                public Match[] monitoredHttpClientEndpoints() {
-                    return annotation.monitoredHttpClientEndpoints();
-                }
+            @Override
+            public Match[] monitoredHttpClientEndpoints() {
+                return (annotation == null ? new Match[0] : annotation.monitoredHttpClientEndpoints());
+            }
 
-                @Override
-                public GraphiteOptions graphite() {
-                    GraphiteOptions graphite = annotation.graphite();
-                    return new GraphiteOptions() {
-                        @Override
-                        public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                            return GraphiteOptions.class;
-                        }
+            @Override
+            public GraphiteOptions graphite() {
+                GraphiteOptions graphite = (annotation == null ? null : annotation.graphite());
+                return new GraphiteOptions() {
+                    @Override
+                    public Class<? extends java.lang.annotation.Annotation> annotationType() {
+                        return GraphiteOptions.class;
+                    }
 
-                        @Override
-                        public boolean enabled() {
-                            return Boolean.parseBoolean(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_GRAPHITE_ENABLED", String.valueOf(graphite.enabled())));
-                        }
+                    @Override
+                    public boolean enabled() {
+                        return Boolean.parseBoolean(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_GRAPHITE_ENABLED", String.valueOf((graphite == null ? false : graphite.enabled()))));
+                    }
 
-                        @Override
-                        public String host() {
-                            return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_GRAPHITE_HOST", graphite.host());
-                        }
+                    @Override
+                    public String host() {
+                        return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_GRAPHITE_HOST", (graphite == null ? "localhost" : graphite.host()));
+                    }
 
-                        @Override
-                        public int port() {
-                            return Integer.parseInt(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_GRAPHITE_PORT", String.valueOf(graphite.port())));
-                        }
+                    @Override
+                    public int port() {
+                        return Integer.parseInt(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_GRAPHITE_PORT", String.valueOf((graphite == null ? 2003 : graphite.port()))));
+                    }
 
-                        @Override
-                        public String prefix() {
-                            return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_GRAPHITE_PREFIX", graphite.prefix());
-                        }
-                    };
-                }
+                    @Override
+                    public String prefix() {
+                        return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_GRAPHITE_PREFIX", (graphite == null ? "" : graphite.prefix()));
+                    }
+                };
+            }
 
-                @Override
-                public PrometheusOptions prometheus() {
-                    PrometheusOptions prometheus = annotation.prometheus();
-                    return new PrometheusOptions() {
-                        @Override
-                        public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                            return PrometheusOptions.class;
-                        }
+            @Override
+            public PrometheusOptions prometheus() {
+                PrometheusOptions prometheus = (annotation == null ? null : annotation.prometheus());
+                return new PrometheusOptions() {
+                    @Override
+                    public Class<? extends java.lang.annotation.Annotation> annotationType() {
+                        return PrometheusOptions.class;
+                    }
 
-                        @Override
-                        public boolean enabled() {
-                            return Boolean.parseBoolean(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_PROMETHEUS_ENABLED", String.valueOf(prometheus.enabled())));
-                        }
+                    @Override
+                    public boolean enabled() {
+                        return Boolean.parseBoolean(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_PROMETHEUS_ENABLED", String.valueOf((prometheus == null ? false : prometheus.enabled()))));
+                    }
 
-                        @Override
-                        public String endpoint() {
-                            return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_PROMETHEUS_ENDPOINT", prometheus.endpoint());
-                        }
+                    @Override
+                    public String endpoint() {
+                        return com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_PROMETHEUS_ENDPOINT", (prometheus == null ? "/metrics" : prometheus.endpoint()));
+                    }
 
-                        @Override
-                        public int port() {
-                            return Integer.parseInt(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_PROMETHEUS_PORT", String.valueOf(prometheus.port())));
-                        }
-                    };
-                }
-            };
-        }
+                    @Override
+                    public int port() {
+                        return Integer.parseInt(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_PROMETHEUS_PORT", String.valueOf((prometheus == null ? 9090 : prometheus.port()))));
+                    }
+                };
+            }
+        };
         return List.of(Future.succeededFuture(true));
     }
 

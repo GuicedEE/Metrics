@@ -46,7 +46,16 @@ implementation("com.guicedee:metrics:2.4.1")
 
 ## 🚀 Quick Start
 
-**Step 1** — Annotate a configuration class with `@MetricsOptions`:
+**Step 1** — Configure metrics in the application's `.env`:
+
+```dotenv
+METRICS_ENABLED=true
+METRICS_JMX_ENABLED=false
+METRICS_PROMETHEUS_ENABLED=true
+METRICS_PROMETHEUS_ENDPOINT=/metrics
+```
+
+No configuration annotation is required. `@MetricsOptions` remains available for annotation defaults and monitored URI/event-bus patterns:
 
 ```java
 @MetricsOptions(
@@ -264,7 +273,7 @@ Each monitored URI/handler/route uses a `@Match` annotation:
 
 ### Environment variable overrides
 
-Every `@MetricsOptions` attribute can be overridden with a system property or environment variable:
+The settings below work without `@MetricsOptions`, including in SPI-only discovery mode. They use `Environment` to resolve system properties, process environment, `.env.local`, `.env`, then annotation/framework defaults, in that order:
 
 | Variable | Overrides | Example |
 |---|---|---|

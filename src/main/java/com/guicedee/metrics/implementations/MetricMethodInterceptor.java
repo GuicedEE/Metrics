@@ -32,7 +32,7 @@ public class MetricMethodInterceptor implements MethodInterceptor {
             annotation = method.getDeclaringClass().getAnnotation(MetricMethod.class);
         }
 
-        String name = annotation.name();
+        String name = com.guicedee.client.Environment.resolveAnnotationValue(annotation.name());
         Object[] arguments = invocation.getArguments();
         
         // If the method has a String parameter, use it as the name if name is empty,
@@ -62,7 +62,7 @@ public class MetricMethodInterceptor implements MethodInterceptor {
 
         Tag[] tags = new Tag[annotation.tags().length];
         for (int i = 0; i < annotation.tags().length; i++) {
-            String tag = annotation.tags()[i];
+            String tag = com.guicedee.client.Environment.resolveAnnotationValue(annotation.tags()[i]);
             int eqIndex = tag.indexOf('=');
             if (eqIndex > 0) {
                 tags[i] = new Tag(tag.substring(0, eqIndex), tag.substring(eqIndex + 1));

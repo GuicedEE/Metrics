@@ -144,10 +144,10 @@ public @interface MetricsOptions {
         String endpoint() default "/metrics";
 
         /**
-         * The port for the Prometheus endpoint.
+         * The port for a dedicated Prometheus listener; -1 shares the application listener, 0 uses an ephemeral port.
          *
          * @return the port number
          */
-        int port() default 9090;
+        int port() default -1;
     }
 }

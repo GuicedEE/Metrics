@@ -44,10 +44,10 @@ public class MetricsVertxConfigurator implements VertxConfigurator {
 
     private io.vertx.ext.dropwizard.Match toMatch(Match match) {
         io.vertx.ext.dropwizard.Match m = new io.vertx.ext.dropwizard.Match();
-        m.setValue(match.value());
+        m.setValue(com.guicedee.client.Environment.resolveAnnotationValue(match.value()));
         m.setType(match.type() == Match.MatchType.REGEX ? io.vertx.ext.dropwizard.MatchType.REGEX : io.vertx.ext.dropwizard.MatchType.EQUALS);
         if (match.alias() != null && !match.alias().isEmpty()) {
-            m.setAlias(match.alias());
+            m.setAlias(com.guicedee.client.Environment.resolveAnnotationValue(match.alias()));
         }
         return m;
     }

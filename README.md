@@ -269,7 +269,7 @@ Each monitored URI/handler/route uses a `@Match` annotation:
 |---|---|---|
 | `enabled` | `false` | Enable Prometheus scrape endpoint |
 | `endpoint` | `"/metrics"` | HTTP path for the scrape handler |
-| `port` | `9090` | Prometheus port (informational) |
+| `port` | `-1` | -1 shares the application HTTP listener; 0..65535 creates a dedicated managed listener |
 
 ### Environment variable overrides
 
@@ -288,7 +288,7 @@ The settings below work without `@MetricsOptions`, including in SPI-only discove
 | `METRICS_GRAPHITE_PREFIX` | `graphite.prefix` | `prod.myapp` |
 | `METRICS_PROMETHEUS_ENABLED` | `prometheus.enabled` | `true` |
 | `METRICS_PROMETHEUS_ENDPOINT` | `prometheus.endpoint` | `/prom/metrics` |
-| `METRICS_PROMETHEUS_PORT` | `prometheus.port` | `9090` |
+| `METRICS_PROMETHEUS_PORT` | `prometheus.port` | `-1` |
 
 Environment variables take precedence over annotation values.
 
@@ -372,7 +372,7 @@ The module declares `uses Metrics;` and discovers implementations via `ServiceLo
 
 ## 📋 Prometheus Endpoint
 
-When `@PrometheusOptions(enabled = true)` is set, a `GET` handler is registered at the configured endpoint (default `/metrics`). The response is `text/plain; version=0.0.4` in Prometheus exposition format:
+When `@PrometheusOptions(enabled = true)` is set, a `GET` handler is registered at the configured endpoint (default `/metrics`). With `port = -1` (default), the route uses the application listener. A non-negative port creates an isolated listener owned by startup/shutdown; it does not add the route to the public listener. The response is `text/plain; version=0.0.4` in Prometheus exposition format:
 
 ```
 # TYPE my_app_orders_placed counter

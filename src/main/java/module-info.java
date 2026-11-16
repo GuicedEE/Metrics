@@ -28,5 +28,7 @@ module com.guicedee.metrics {
     provides com.guicedee.vertx.spi.VertxConfigurator with com.guicedee.metrics.implementations.MetricsVertxConfigurator;
     provides com.guicedee.vertx.web.spi.VertxRouterConfigurator with com.guicedee.metrics.implementations.PrometheusMetricsConfigurator;
 
+    provides com.guicedee.vertx.web.spi.ManagedHttpListenerProvider with com.guicedee.metrics.implementations.PrometheusMetricsConfigurator;
+
     uses Metrics;
 }

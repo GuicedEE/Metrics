@@ -130,7 +130,7 @@ public class MetricsPreStartup implements IGuicePreStartup<MetricsPreStartup> {
 
                     @Override
                     public int port() {
-                        return Integer.parseInt(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_PROMETHEUS_PORT", String.valueOf((prometheus == null ? 9090 : prometheus.port()))));
+                        return Integer.parseInt(com.guicedee.client.Environment.getSystemPropertyOrEnvironment("METRICS_PROMETHEUS_PORT", String.valueOf((prometheus == null ? -1 : prometheus.port()))));
                     }
                 };
             }
